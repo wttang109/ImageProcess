@@ -135,11 +135,11 @@ for p in range(910, 915):
     for q in range(270, 272):
         if (src[p,q] < 160):
             print('src: ', p, q, src[p,q])
-'''            
+'''
 img = cv2.imread(ph2)
 rows,cols ,s= img.shape
  
-M = np.float32([[1,0,-2],[0,1,3]])
+M = np.float32([[1,0,-2],[0,1,3]])#x正為右移 y正為下移
 dst = cv2.warpAffine(img,M,(4650,7000))
 
 sub = dst - s1
