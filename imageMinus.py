@@ -8,11 +8,12 @@ Created on Tue Oct 16 15:42:28 2018
 import cv2
 import numpy as np
 #import imutils
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
+
 #from __future__ import print_function
 '''
 #尋找特徵及匹配 https://blog.csdn.net/yuanlulu/article/details/82222119
-MAX_FEATURES = 500
+MAX_FEATURES = 1000
 GOOD_MATCH_PERCENT = 0.15
 
 def alignImages(im1, im2):
@@ -38,7 +39,7 @@ def alignImages(im1, im2):
 
     # Draw top matches
     imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
-    cv2.imwrite("matches.jpg", imMatches)
+    cv2.imwrite("matches_10000_015MFP_good_1.jpg", imMatches)
 
     # Extract location of good matches
     points1 = np.zeros((len(matches), 2), dtype=np.float32)
@@ -57,12 +58,13 @@ def alignImages(im1, im2):
 
     return im1Reg, h
 '''
+
 #cv2.namedWindow("s1", cv2.WINDOW_NORMAL)# Create window with freedom of dimensions
 #cv2.namedWindow("s2", cv2.WINDOW_NORMAL)
 #cv2.namedWindow("result", cv2.WINDOW_NORMAL)
 
-ph1 = "C:/Users/sue/Desktop/111.bmp"#MFP_good_1.bmp
-ph2 = "C:/Users/sue/Desktop/112.bmp"#MFP_brokengear_1.bmp
+ph1 = "C:/Users/sue/Desktop/MFP_good_1.bmp"#MFP_good_1.bmp
+ph2 = "C:/Users/sue/Desktop/MFP_brokengear_1.bmp"#MFP_brokengear_1.bmp
 '''
 img = cv2.imread(ph1)
 size = img.shape
@@ -70,6 +72,8 @@ print (size)
 '''
 s1 = cv2.imread(ph1) #cv2.IMREAD_GRAYSCALE = 0
 s2 = cv2.imread(ph2)
+
+'''
 threshold= 1  #門檻值
 # 產生等高線
 contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -99,7 +103,7 @@ cv2.drawContours(img_debug, [box], 0, (0, 0, 255), line_width)
 # 除錯用的圖形
 plt.imshow(cv2.cvtColor(img_debug, cv2.COLOR_BGR2RGB))
 plt.show()
-
+'''
 
 #img_small = imutils.resize(s1, width=2325, height=3500)
 #img_small = imutils.resize(s2, width=300, height=300)
@@ -112,15 +116,45 @@ print("Aligning images ...")
 imReg, h = alignImages(s1, s2)
 
 # Write aligned image to disk. 
-outFilename = "aligned.jpg"
+outFilename = "aligned_10000_015MFP_good_1.jpg"
 print("Saving aligned image : ", outFilename); 
 cv2.imwrite(outFilename, imReg)
 
 # Print estimated homography
 print("Estimated homography : \n",  h)
 '''
-#sub = s1 - s2
+##########################掃描對齊圖示########################
+'''
+for i in range(910, 916):
+    for j in range(267, 270):
+        if (s1[i,j] < 160):
+            print('s1: ', i, j, s1[i,j])
+print('done s1')
+
+for p in range(910, 915):
+    for q in range(270, 272):
+        if (src[p,q] < 160):
+            print('src: ', p, q, src[p,q])
+'''            
+img = cv2.imread(ph2)
+rows,cols ,s= img.shape
+ 
+M = np.float32([[1,0,-2],[0,1,3]])
+dst = cv2.warpAffine(img,M,(4650,7000))
+
+sub = dst - s1
+
+#cv2.imshow('img',dst)
+#cv2.waitKey(0)
+cv2.imwrite('outFile.bmp', sub)
+#cv2.destroyAllWindows()
+
+##########################掃描對齊圖示########################
+
+'''
+sub = s1 - s2
 #emptyimg = np.zeros(s1.shape,np.uint8)
+'''
 '''
 def pic_sub(dest,s1,s2):
     for x in range(dest.shape[0]):
@@ -141,9 +175,11 @@ def pic_sub(dest,s1,s2):
 #cv2.resizeWindow("s1", 500, 500)
 #cv2.imshow("s1",s1)
 #cv2.imshow("s2",s2)
-#cv2.imshow("result",sub)
-#cv2.waitKey(0)#键盘绑定函数, 0為輸入任意鍵後執行
-#cv2.destroyAllWindows()#關閉打開的視窗
+'''
+cv2.imshow("result",sub)
+cv2.waitKey(0)#键盘绑定函数, 0為輸入任意鍵後執行
+cv2.destroyAllWindows()#關閉打開的視窗
+'''
 '''
 plt.imshow(s1,  interpolation='None')
 plt.show()
