@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 #cv2.namedWindow("Aligned Image 2", cv2.WINDOW_NORMAL)
 
 # Read the images to be aligned
-im1 =  cv2.imread("C:/Users/sue/Desktop/MFP_good_1.bmp")#MFP_good_1
-im2 =  cv2.imread("C:/Users/sue/Desktop/MFP_brokengear_1.bmp")#MFP_brokengear_1
+im1 =  cv2.imread("MFP_good_MTF_600dpi-color_1.bmp")#MFP_good_1
+im2 =  cv2.imread("MFP_defect_MTF_600dpi-color_1.bmp")#MFP_brokengear_1
 
 # Convert images to grayscale
 im1_gray = cv2.cvtColor(im1,cv2.COLOR_BGR2GRAY)
@@ -55,18 +55,18 @@ else :
     im2_aligned = cv2.warpAffine(im2, warp_matrix, (sz[1],sz[0]),
                                  flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP)
 
-sub = im2_aligned - im1 
-sub_gray = cv2.cvtColor(sub,cv2.COLOR_BGR2GRAY)
+sub = im2_aligned - im1
+#sub_gray = cv2.cvtColor(sub,cv2.COLOR_BGR2GRAY)
 #q = im2 - im1 
 # Show final results
 #cv2.imshow("Image 1", im1)
 #cv2.imshow("Image 2", im2)
 #cv2.imshow("Aligned Image 2", im2_aligned)
-#cv2.imwrite('Aligned Image 2.bmp', im2_aligned)
+cv2.imwrite('000Aligned Image 2.bmp', im2_aligned)
 
 #cv2.imshow("im2_aligned_im1", sub)
 
-#cv2.imwrite('sub.bmp', sub)
+cv2.imwrite('000sub.bmp', sub)
 #cv2.imwrite('q.bmp', q)
 #cv2.waitKey(0)
 '''
@@ -80,12 +80,19 @@ cut_sub = sub[y : y+hh, x : x+w]
 
 cv2.imwrite('cut_sub.bmp',cut_sub)
 #cv2.imwrite('cut2.bmp',cut_s2)
-
+'''
 ##########################擷取部分影像#############################
 '''
+#sub =  cv2.imread("MFP_good_MTF_bg1.bmp")#MFP_good_1
 #################FFT########################https://blog.csdn.net/on2way/article/details/46981825 
 #img = cv2.imread('sub.bmp',0) #直接读为灰度图像
-f = np.fft.fft(sub_gray)
+col = sub[:,1190]#1190為I
+a = col[:,0]
+b = col[:,1]
+c = col[:,2]
+col_av = (a.astype(int)+b.astype(int)+c.astype(int))/3
+#sub_gray = cv2.cvtColor(sub,cv2.COLOR_BGR2GRAY)
+f = np.fft.fft(col_av)
 
 #fshift = np.fft.fftshift(f)
 #取绝对值：将复数变化成实数
@@ -98,17 +105,28 @@ s1 = np.abs(f)
 #cv2.imwrite('s1.bmp',s1)
 #cv2.imwrite('s2.bmp',s2)
 
-plt.figure(figsize=(80,20),dpi=100,linewidth = 0.9)
-plt.plot(s1[:,1163])
+plt.figure(figsize=(100,40),dpi=100,linewidth = 0.9)
+plt.subplot(211)
+plt.plot(col_av[:])
 plt.xticks(fontsize=40)
 plt.yticks(fontsize=40)
-plt.title("sub by FFT",fontsize = 60)
+plt.title("d2_1_average ",fontsize = 60)
 plt.xlabel('pixel',fontsize=60)
-plt.ylabel('abs',fontsize=60)
+plt.ylabel('value',fontsize=60)
+plt.ylim((0, 200))
 
-plt.savefig("fft_sub_gray.png")
+plt.subplot(212)
+plt.plot(s1[:])
+plt.xticks(fontsize=40)
+plt.yticks(fontsize=40)
+plt.title("d2_1_col_av by FFT",fontsize = 60)
+plt.xlabel('pixel',fontsize=60)
+plt.ylabel('amplitude',fontsize=60)
+plt.ylim((0, 20000))
+
+plt.savefig("d2_1222.png")
 #plt.show()
-
+'''
 
 
 
