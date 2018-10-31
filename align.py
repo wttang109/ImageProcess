@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Oct 24 15:20:09 2018
-
 @author: sue
 """
 
@@ -141,17 +140,55 @@ print('calculate amplitude')
 #cv2.imwrite('s2.bmp',s2)
 '''
 plt.figure(figsize=(80,20),dpi=100,linewidth = 0.9)
-plt.plot(s1[:,1192]) #MFP_good_MTF_600dpi-color_1(1192)
+plt.plot(s1[:,4000]) #MFP_good_MTF_600dpi-color_1(1192)
 plt.xticks(fontsize=40)
 plt.yticks(fontsize=40)
 plt.title("sub after FFT",fontsize = 60)
 plt.xlabel('pixel',fontsize=60)
 plt.ylabel('abs',fontsize=60)
-
 plt.savefig("fft_sub_gray.png")
 #plt.show()
 '''
+col = sub[:,1190]#1190為I
+a = col[:,0]
+b = col[:,1]
+c = col[:,2]
+col_av = (a.astype(int)+b.astype(int)+c.astype(int))/3
+#sub_gray = cv2.cvtColor(sub,cv2.COLOR_BGR2GRAY)
+f = np.fft.fft(col_av)
 
+#fshift = np.fft.fftshift(f)
+#取绝对值：将复数变化成实数
+#取对数的目的为了将数据变化到较小的范围（比如0-255）
+#s1 = np.log(np.abs(f))
+s1 = np.abs(f)
+#s2 = np.log(np.abs(fshift))
+#plt.subplot(121),plt.imshow(s1,'gray'),plt.title('original')
+#plt.subplot(122),plt.imshow(s2,'gray'),plt.title('center')
+#cv2.imwrite('s1.bmp',s1)
+#cv2.imwrite('s2.bmp',s2)
+
+plt.figure(figsize=(100,40),dpi=100,linewidth = 0.9)
+plt.subplot(211)
+plt.plot(col_av[:])
+plt.xticks(fontsize=40)
+plt.yticks(fontsize=40)
+plt.title("000MFP_defect_MTF_600dpi-color_1_average ",fontsize = 60)
+plt.xlabel('pixel',fontsize=60)
+plt.ylabel('value',fontsize=60)
+plt.ylim((0, 200))
+
+plt.subplot(212)
+plt.plot(s1[:])
+plt.xticks(fontsize=40)
+plt.yticks(fontsize=40)
+plt.title("000MFP_defect_MTF_600dpi-color_1col_av by FFT",fontsize = 60)
+plt.xlabel('pixel',fontsize=60)
+plt.ylabel('amplitude',fontsize=60)
+plt.ylim((0, 20000))
+
+plt.savefig("000MFP_defect_MTF_600dpi-color_1.png")
+#plt.show()
 
 '''
 # Convert images to grayscale
@@ -191,7 +228,6 @@ else :
     # Use warpAffine for Translation, Euclidean and Affine
     im2_aligned = cv2.warpAffine(im2, warp_matrix, (sz[1],sz[0]),
                                  flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP)
-
 sub = im2_aligned - im1 
 #sub_gray = cv2.cvtColor(sub,cv2.COLOR_BGR2GRAY)
 #q = im2 - im1 
@@ -200,13 +236,10 @@ sub = im2_aligned - im1
 #cv2.imshow("Image 2", im2)
 #cv2.imshow("Aligned Image 2", im2_aligned)
 cv2.imwrite('Aligned Image 2.bmp', im2_aligned)
-
 #cv2.imshow("im2_aligned_im1", sub)
-
 cv2.imwrite('sub_BINARY_bg_500.bmp', sub)
 #cv2.imwrite('q.bmp', q)
 #cv2.waitKey(0)
-
 ##########################擷取部分影像#############################
 x = 600
 y = 200
@@ -214,27 +247,7 @@ w = 400
 hh = 400
 cut_sub = sub[y : y+hh, x : x+w]
 #cut_s2 = s2[y : y+hh, x : x+w]
-
 cv2.imwrite('cut_sub.bmp',cut_sub)
 #cv2.imwrite('cut2.bmp',cut_s2)
-
 ##########################擷取部分影像#############################
 '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
