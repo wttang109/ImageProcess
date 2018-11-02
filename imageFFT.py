@@ -7,7 +7,15 @@ Created on Thu Nov  1 09:56:02 2018
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-################# FFT ########################https://blog.csdn.net/on2way/article/details/46981825 
+import pandas as pd
+
+file_name = 'data.xlsx'
+
+xl_workbook = pd.ExcelFile(file_name)  # Load the excel workbook
+df = xl_workbook.parse("Sheet1")  # Parse the sheet into a dataframe
+aList = df['50lppi_H'].tolist()  # Cast the desired column into a python list
+################# FFT ########################https://blog.csdn.net/on2way/article/details/46981825
+#alist = exceltolist.aList #讀取excel資料
 img = cv2.imread('sub_defect_good.bmp') #除3使用
 #img = cv2.imread('sub_defect_good.bmp',0) #直接读为灰度图像
 #cv2.imwrite('img.bmp', img)
@@ -16,9 +24,9 @@ col = img[:,1200]#1190為I
 a = col[:,0]
 b = col[:,1]
 c = col[:,2]
-col_gray = (a.astype(int)+b.astype(int)+c.astype(int))/3
+col_gray = (a.astype(int)+b.astype(int)+c.astype(int))/27
 
-f = np.fft.fft(col_gray)
+f = np.fft.fft(aList[:7000])
 print('sub after fft')
 #fshift = np.fft.fftshift(f)
 #取绝对值：将复数变化成实数
@@ -28,34 +36,39 @@ s1 = np.abs(f)
 print('calculate amplitude')
 #s2 = np.log(np.abs(fshift))
 
+sam = 7000
+step = 0.0423
+sam_rate = 1/step
+dist = sam_rate/sam
+del_f = []
+for i in range(0,7000):
+    dist_list = dist*i
+    del_f.append(dist_list)
+
 plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
 plt.subplot(211)
 #plt.plot(img[:, 1200]) # MFP_good_1 (4000)
-plt.plot(col_gray)
+plt.plot(del_f,aList[:7000])
 plt.xticks(fontsize=40)
 plt.yticks(fontsize=40)
-plt.title("_defect_good ",fontsize=60) #000MFP_brokengear_1 - MFP_good_1
+plt.title("col_27_defect_good ",fontsize=60) #000MFP_brokengear_1 - MFP_good_1
 plt.xlabel('pixel',fontsize=60)
 plt.ylabel('value',fontsize=60)
 plt.ylim((0, 300))
 
 plt.subplot(212)
-plt.plot(s1)
+plt.plot(del_f,s1)
 #plt.plot(s1[:, 1200]) #MFP_good_MTF_600dpi-color_1(1192)
 plt.xticks(fontsize=40)
 plt.yticks(fontsize=40)
 plt.title("sub after FFT",fontsize=60)
-plt.xlabel('pixel',fontsize=60)
+plt.xlabel('delta freqency',fontsize=60)
 plt.ylabel('abs',fontsize=60)
-plt.ylim((0, 20000))
+plt.ylim((0, 12000))
 
-plt.savefig("fft_sub_defect_good.png")
+plt.savefig("fft_sub_defect_good_colfffff.png")
 #plt.show()
 
-sam = 7000
-step = 0.0423
-sam_rate = 1/step
-dist = sam_rate/sam
 
 
 
