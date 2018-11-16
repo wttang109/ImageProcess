@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 '''
-test = 'minus_IT45_defect-gear_total-image_600color.tif'
-img = cv2.imread('{x}.tif'.format(x=test),0) 
+test = 'MFP_g1_MFP_b1'
+img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
 rows_h = int(rows/2)
@@ -25,15 +25,13 @@ col_50,  s_50   = col_fft_abs(img,1530)
 col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
-################ 取40行 ##################################################
-test = 'minus_IT45_defect-gear_total-image_600color.tif'
-img = cv2.imread('{x}.tif'.format(x=test),0) 
-#cv2.imwrite('img.bmp', img)
+################ 自動取 N 行 ##################################################
+test = 'MFP_g1_MFP_g2'
+img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
 rows_h = int(rows/2)
 def col_fft_abs(test_image,x_pixel,cn):
-
     col_x = np.zeros(shape=(rows,cn))
     f_x = np.zeros(shape=(rows,cn))
     s_x = np.zeros(shape=(rows,cn))
@@ -43,12 +41,19 @@ def col_fft_abs(test_image,x_pixel,cn):
         s_x[:,i-x_pixel+int(cn/2)] = np.abs(f_x[:,i-x_pixel+int(cn/2)])
     return col_x, s_x
 col_num = 100
+'''
 col_50,  s_50   = col_fft_abs(img,1530,col_num)
 col_75,  s_75   = col_fft_abs(img,1940,col_num)
 col_100, s_100  = col_fft_abs(img,2330,col_num)
 col_50i, s_50i  = col_fft_abs(img,2760,col_num)
 col_75i, s_75i  = col_fft_abs(img,3160,col_num)
 col_100i,s_100i = col_fft_abs(img,3550,col_num)
+'''
+col_150L, s_150L = col_fft_abs(img,1430,col_num)
+col_100L, s_100L = col_fft_abs(img,2180,col_num)
+col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
+
+
 ################ 取40行 ##################################################
 
 def find_max(cn,col,left,right,maxnum):
@@ -57,12 +62,12 @@ def find_max(cn,col,left,right,maxnum):
         index = np.argsort(col[:,i][left:right])[-maxnum:]+left
         df = index * dist
         plt.scatter(df,fft)
-        my_x_ticks = np.arange(0, 8.6, 0.2)
+        my_x_ticks = np.arange(0, 12, 0.25)
         plt.xticks(my_x_ticks)
 #        for a, b in zip(index, fft):
 #            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
 
-sam = 6950
+sam = 7000
 step = 0.0423
 sam_rate = 1/step
 dist = sam_rate/sam
@@ -81,41 +86,61 @@ def plot_f(subnum,y,value,picname,xname):
 #    show_max='['+str(max_indx最大值位置)+' '+str(ran[max_indx]最大值)+']'
 #    plt.annotate(show_max,xytext=(max_indx,ran[max_indx]),xy=(max_indx,ran[max_indx]))
 ############ https://blog.csdn.net/Running_J/article/details/52119336 ####
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.title("FFT_{x}_{y}_{cn} lppi".format(x=picname,y=xname,cn=col_num,fontsize=30))
-    plt.ylabel('abs',fontsize=40)
+    plt.xticks(fontsize=50)
+    plt.yticks(fontsize=50)
+    plt.title("FFT_{x}_{y}".format(x=picname,y=xname),fontsize=50)
+    plt.ylabel('abs',fontsize=50)
     my_x_ticks = np.arange(0, 12, 0.5)
     plt.xticks(my_x_ticks)
     plt.ylim((0, 12000))
-'''  
-'''
+ 
+
 plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
-plot_f(311,del_f,s_50[:rows_h],test,'s_50')
-plot_f(312,del_f,s_75[:rows_h],test,'s_75')
-plot_f(313,del_f,s_100[:rows_h],test,'s_100')
-plt.savefig("_test_FFT_50_75_100_150_{x}.png".format(x=test))
+plt.style.use('ggplot')
+plot_f(311,del_f,s_150L[:rows_h,49],test,'s_150L')
+plot_f(312,del_f,s_100L[:rows_h,49],test,'s_100L')
+plot_f(313,del_f,s_75L[:rows_h,49],test,'s_75L')
+plt.savefig("FFT_{x}.png".format(x=test))
 '''
 #s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]  #原來順序np指定區間找前三大值
 #np.argsort(x) #由小到大的索引
 
-plt.figure(figsize=(25,15))
+plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
-find_max(col_num,s_50,150,450,3)
-find_max(col_num,s_50,700,1100,3)
-find_max(col_num,s_50,1300,1700,3)
-find_max(col_num,s_50,1900,2300,3)
-plt.xticks(fontsize=10)
-plt.yticks(fontsize=10)
-plt.title("{x}_{y}_{cn} lppi".format(x=test,y='s_50',cn=col_num),fontsize=20)
+find_max(col_num,s_150L,100,1700,3)
+find_max(col_num,s_150L,1900,3350,3)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_150L',cn=col_num),fontsize=20)
 plt.xlabel('del_f',fontsize=20)
 plt.ylabel('abs',fontsize=20)
-plt.savefig("_test_max_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_50'))
+plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_150L'))
+
+plt.figure(figsize=(40,10))
+plt.style.use('ggplot')
+find_max(col_num,s_100L,100,1100,3)
+find_max(col_num,s_100L,1350,1300,3)
+find_max(col_num,s_100L,2530,3450,3)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_100L',cn=col_num),fontsize=20)
+plt.xlabel('del_f',fontsize=20)
+plt.ylabel('abs',fontsize=20)
+plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_100L'))
+
+plt.figure(figsize=(40,10))
+plt.style.use('ggplot')
+find_max(col_num,s_100L,100,800,3)
+find_max(col_num,s_100L,1150,1700,3)
+find_max(col_num,s_100L,1900,2650,3)
+find_max(col_num,s_100L,2750,3330,3)
+plt.xticks(fontsize=15)
+plt.yticks(fontsize=15)
+plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_75L',cn=col_num),fontsize=20)
+plt.xlabel('del_f',fontsize=20)
+plt.ylabel('abs',fontsize=20)
+plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_57L'))
 plt.show()
-
-
-
-
 
 
 
