@@ -26,7 +26,7 @@ col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
 ################ 自動取 N 行 ##################################################
-test = 'MFP_g1_MFP_g2'
+test = 'MFP_g1_MFP_b1'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
@@ -53,19 +53,22 @@ col_150L, s_150L = col_fft_abs(img,1430,col_num)
 col_100L, s_100L = col_fft_abs(img,2180,col_num)
 col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
 
-
 ################ 取40行 ##################################################
 
-def find_max(cn,col,left,right,maxnum):
+def find_max(cn,col,left,right,maxnum,f_L,d_L):
     for i in range(0,cn):
         fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])]
         index = np.argsort(col[:,i][left:right])[-maxnum:]+left
         df = index * dist
+        for j in range(0,maxnum):
+            f_L.append(fft[j])
+            d_L.append(df[j])
         plt.scatter(df,fft)
         my_x_ticks = np.arange(0, 12, 0.25)
         plt.xticks(my_x_ticks)
 #        for a, b in zip(index, fft):
 #            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
+
 
 sam = 7000
 step = 0.0423
@@ -75,6 +78,18 @@ del_f = []
 for i in range(0,rows_h):
     dist_list = dist*i
     del_f.append(dist_list)
+'''
+############## test ###############
+data = []
+
+for i in range(0,100):
+    fftx = s_150L[:,i][100:1700][(np.argsort(s_150L[:,i][100:1700])[-3:])]
+    indexx = np.argsort(s_150L[:,i][100:1700])[-3:]+100
+#    dfx = indexx * dist
+'''
+    
+############## test ###############
+    
 '''
 def plot_f(subnum,y,value,picname,xname):
     plt.subplot(subnum)
@@ -104,46 +119,66 @@ plt.savefig("FFT_{x}.png".format(x=test))
 '''
 #s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]  #原來順序np指定區間找前三大值
 #np.argsort(x) #由小到大的索引
+f_150L = []
+d_150L = []
+f_100L = []
+d_100L = []
+f_75L = []
+d_75L = []
 
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
-find_max(col_num,s_150L,100,1700,3)
-find_max(col_num,s_150L,1900,3350,3)
+find_max(col_num,s_150L,100,1700,3,f_150L,d_150L)
+find_max(col_num,s_150L,1900,3350,3,f_150L,d_150L)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_150L',cn=col_num),fontsize=20)
 plt.xlabel('del_f',fontsize=20)
 plt.ylabel('abs',fontsize=20)
-plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_150L'))
+plt.savefig("MAX2_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_150L'))
 
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
-find_max(col_num,s_100L,100,1100,3)
-find_max(col_num,s_100L,1350,1300,3)
-find_max(col_num,s_100L,2530,3450,3)
+find_max(col_num,s_100L,100,1100,3,f_100L,d_100L)
+find_max(col_num,s_100L,1350,2350,3,f_100L,d_100L)
+#find_max(col_num,s_100L,2530,3450,3)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_100L',cn=col_num),fontsize=20)
 plt.xlabel('del_f',fontsize=20)
 plt.ylabel('abs',fontsize=20)
-plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_100L'))
+plt.savefig("MAX2_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_100L'))
 
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
-find_max(col_num,s_100L,100,800,3)
-find_max(col_num,s_100L,1150,1700,3)
-find_max(col_num,s_100L,1900,2650,3)
-find_max(col_num,s_100L,2750,3330,3)
+find_max(col_num,s_100L,100,800,3,f_75L,d_75L)
+find_max(col_num,s_100L,1150,1700,3,f_75L,d_75L)
+#find_max(col_num,s_100L,1900,2650,3)
+#find_max(col_num,s_100L,2750,3330,3)
 plt.xticks(fontsize=15)
 plt.yticks(fontsize=15)
 plt.title("{x}_{y}_{cn}pt".format(x=test,y='s_75L',cn=col_num),fontsize=20)
 plt.xlabel('del_f',fontsize=20)
 plt.ylabel('abs',fontsize=20)
-plt.savefig("MAX_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_57L'))
+plt.savefig("MAX2_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_57L'))
 plt.show()
 
 
+listk = ['f_150L','d_150L','f_100L','d_100L','f_75L','d_75L','type']
+datas = {}
+datas['f_150L'] = f_150L
+datas['d_150L'] = d_150L
+datas['f_100L'] = f_100L
+datas['d_100L'] = d_100L
+datas['f_75L'] = f_75L
+datas['d_75L'] = d_75L
+datas['type'] = 1
 
+cols = pd.DataFrame(columns = listk)
+
+for id in listk:
+    cols[id] = datas[id]
+cols.to_csv('max_{x}.csv'.format(x=test))
 
 
 
