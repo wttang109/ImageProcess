@@ -25,8 +25,8 @@ col_50,  s_50   = col_fft_abs(img,1530)
 col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
-################ 自動取 N 行 ##################################################
-test = 'MFP_g1_MFP_b1'
+################ take N colums for fft sample ##################################################
+test = 'MFP_good_1_MFP_60T-brokengear_2'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
@@ -53,11 +53,11 @@ col_150L, s_150L = col_fft_abs(img,1430,col_num)
 col_100L, s_100L = col_fft_abs(img,2180,col_num)
 col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
 
-################ 取40行 ##################################################
+################ take N colums for fft sample ##################################################
 
 def find_max(cn,col,left,right,maxnum,f_L,d_L):
     for i in range(0,cn):
-        fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])]
+        fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])] # find max value
         index = np.argsort(col[:,i][left:right])[-maxnum:]+left
         df = index * dist
         for j in range(0,maxnum):
@@ -69,7 +69,6 @@ def find_max(cn,col,left,right,maxnum,f_L,d_L):
 #        for a, b in zip(index, fft):
 #            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
 
-
 sam = 7000
 step = 0.0423
 sam_rate = 1/step
@@ -79,18 +78,7 @@ for i in range(0,rows_h):
     dist_list = dist*i
     del_f.append(dist_list)
 '''
-############## test ###############
-data = []
-
-for i in range(0,100):
-    fftx = s_150L[:,i][100:1700][(np.argsort(s_150L[:,i][100:1700])[-3:])]
-    indexx = np.argsort(s_150L[:,i][100:1700])[-3:]+100
-#    dfx = indexx * dist
-'''
-    
-############## test ###############
-    
-'''
+#### plot result ####
 def plot_f(subnum,y,value,picname,xname):
     plt.subplot(subnum)
     plt.plot(y,value)
@@ -98,7 +86,7 @@ def plot_f(subnum,y,value,picname,xname):
 #    max_indx=np.argmax(ran)#max value index    
 #    plt.plot(max_indx,ran[max_indx],'ks')
     
-#    show_max='['+str(max_indx最大值位置)+' '+str(ran[max_indx]最大值)+']'
+#    show_max='['+str(max_indx)+' '+str(ran[max_indx])+']'
 #    plt.annotate(show_max,xytext=(max_indx,ran[max_indx]),xy=(max_indx,ran[max_indx]))
 ############ https://blog.csdn.net/Running_J/article/details/52119336 ####
     plt.xticks(fontsize=50)
@@ -108,7 +96,6 @@ def plot_f(subnum,y,value,picname,xname):
     my_x_ticks = np.arange(0, 12, 0.5)
     plt.xticks(my_x_ticks)
     plt.ylim((0, 12000))
- 
 
 plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
 plt.style.use('ggplot')
@@ -117,8 +104,8 @@ plot_f(312,del_f,s_100L[:rows_h,49],test,'s_100L')
 plot_f(313,del_f,s_75L[:rows_h,49],test,'s_75L')
 plt.savefig("FFT_{x}.png".format(x=test))
 '''
-#s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]  #原來順序np指定區間找前三大值
-#np.argsort(x) #由小到大的索引
+# s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]
+# np.argsort(x) # sort index
 f_150L = []
 d_150L = []
 f_100L = []
@@ -163,7 +150,6 @@ plt.ylabel('abs',fontsize=20)
 plt.savefig("MAX2_{x}_{y}_{cn}.png".format(x=test,cn=col_num,y='s_57L'))
 plt.show()
 
-
 listk = ['f_150L','d_150L','f_100L','d_100L','f_75L','d_75L','type']
 datas = {}
 datas['f_150L'] = f_150L
@@ -172,20 +158,12 @@ datas['f_100L'] = f_100L
 datas['d_100L'] = d_100L
 datas['f_75L'] = f_75L
 datas['d_75L'] = d_75L
-datas['type'] = 1
+datas['type'] = 1 # label of good or defect
 
 cols = pd.DataFrame(columns = listk)
-
 for id in listk:
     cols[id] = datas[id]
 cols.to_csv('max_{x}.csv'.format(x=test))
-
-
-
-
-
-
-
 
 
 
