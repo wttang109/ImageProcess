@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
 file_name = 'Wnoise588.xlsx'
 xl_workbook = pd.ExcelFile(file_name)  # Load the excel workbook
 df = xl_workbook.parse("Sheet1")  # Parse the sheet into a dataframe
