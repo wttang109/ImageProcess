@@ -10,45 +10,51 @@ from sklearn import cross_validation, ensemble, metrics
 from sklearn.tree import DecisionTreeClassifier
 
 # loading data
-url = "max_data.xlsx"
-max_abs = pd.read_excel(url)
+url = "kurt_all.csv"
+max_abs = pd.read_csv(url)
 
 # build train ans test data
-max_abs_X = pd.DataFrame([max_abs["f_150L"],
-                          max_abs["d_150L"],
-                          max_abs["f_100L"],
-                          max_abs["d_100L"],
-                          max_abs["f_75L"],
-                          max_abs["d_75L"],]).T # swich row and colum
+max_abs_X = pd.DataFrame([max_abs["kt_c_150L"],max_abs["kt_d_150L"],max_abs["kt_e_150L"],max_abs["kt_f_150L"],
+                          max_abs["kt_g_150L"],max_abs["kt_h_150L"],max_abs["kt_i_150L"],max_abs["kt_j_150L"],
+                          max_abs["kt_c_100L"],max_abs["kt_d_100L"],max_abs["kt_e_100L"],max_abs["kt_f_100L"],
+                          max_abs["kt_g_100L"],max_abs["kt_h_100L"],max_abs["kt_i_100L"],max_abs["kt_j_100L"],
+                          max_abs["kt_c_75L"], max_abs["kt_d_75L"], max_abs["kt_e_75L"], max_abs["kt_f_75L"],
+                          max_abs["kt_g_75L"], max_abs["kt_h_75L"], max_abs["kt_i_75L"], max_abs["kt_j_75L"]]).T
+         
+# swich row and colum
+max_abs_y = max_abs["label"]
 
-max_abs_y = max_abs["type"]
-
-train_X, test_X, train_y, test_y = cross_validation.train_test_split(max_abs_X, max_abs_y, test_size = 0.3)
+#train_X, test_X, train_y, test_y = cross_validation.train_test_split(max_abs_X, max_abs_y, test_size = 0.3)
 
 # build random forest model
 forest = ensemble.RandomForestClassifier(n_estimators = 100) # number of decision tree
 
-forest = forest.fit(train_X, train_y)
+forest = forest.fit(max_abs_X, max_abs_y)
 
 # predicted
-test_y_predicted = forest.predict(test_X)
+#test_y_predicted = forest.predict(test_X)
 
 # accuracy
+#accuracy = metrics.accuracy_score(test_y, test_y_predicted)
+#print(accuracy)
+
+url_test = 'kurt_MFP_good_1_MFP_60T-brokengear_3.csv'
+test2 = pd.read_csv(url_test)
+
+test2_X = pd.DataFrame([test2["kt_c_150L"],test2["kt_d_150L"],test2["kt_e_150L"],test2["kt_f_150L"],
+                        test2["kt_g_150L"],test2["kt_h_150L"],test2["kt_i_150L"],test2["kt_j_150L"],
+                        test2["kt_c_100L"],test2["kt_d_100L"],test2["kt_e_100L"],test2["kt_f_100L"],
+                        test2["kt_g_100L"],test2["kt_h_100L"],test2["kt_i_100L"],test2["kt_j_100L"],
+                        test2["kt_c_75L"], test2["kt_d_75L"], test2["kt_e_75L"], test2["kt_f_75L"],
+                        test2["kt_g_75L"], test2["kt_h_75L"], test2["kt_i_75L"], test2["kt_j_75L"]]).T
+
+
+test_y = test2["label"]
+test_y_predicted = forest.predict(test2_X)
 accuracy = metrics.accuracy_score(test_y, test_y_predicted)
 print(accuracy)
-'''
-url_test = 'max_MFP_good_1_MFP_60T-brokengear_2.csv'
-test2 = pd.read_csv(url_test)
-test2_X = pd.DataFrame([test2["f_150L"],
-                        test2["d_150L"],
-                        test2["f_100L"],
-                        test2["d_100L"],
-                        test2["f_75L"],
-                        test2["d_75L"],]).T # swich row and colum
 
-test2_predicted = forest.predict(test2_X)
-print(test2_predicted)
-'''
+
 
 '''
 # accuracy

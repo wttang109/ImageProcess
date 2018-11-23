@@ -26,7 +26,8 @@ col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
 ################ take N colums for fft sample ##################################################
-test = 'MFP_good_1_MFP_60T-brokengear_2'
+test = 'MFP_good_1_MFP_60T-brokengear_3'
+label = '60T'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
@@ -69,6 +70,103 @@ def find_max(cn,col,left,right,maxnum,f_L,d_L):
 #        for a, b in zip(index, fft):
 #            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
 
+def kurt(cn,col,left,right,kt):
+    for i in range(0,cn):
+        ks = pd.Series(col[:,i][left:right+1])
+        k = ks.kurt()
+        kt.append(k)
+
+kt_c_150L=[]
+kt_d_150L=[]
+kt_e_150L=[]
+kt_f_150L=[]
+kt_g_150L=[]
+kt_h_150L=[]
+kt_i_150L=[]
+kt_j_150L=[]
+kurt(col_num,s_150L,38,44,kt_c_150L)
+kurt(col_num,s_150L,174,293,kt_d_150L)
+kurt(col_num,s_150L,382,555,kt_e_150L)
+kurt(col_num,s_150L,607,780,kt_f_150L)
+kurt(col_num,s_150L,846,1019,kt_g_150L)
+kurt(col_num,s_150L,1075,1248,kt_h_150L)
+kurt(col_num,s_150L,1300,1473,kt_i_150L)
+kurt(col_num,s_150L,1539,1712,kt_j_150L)
+
+kt_c_100L=[]
+kt_d_100L=[]
+kt_e_100L=[]
+kt_f_100L=[]
+kt_g_100L=[]
+kt_h_100L=[]
+kt_i_100L=[]
+kt_j_100L=[]
+kurt(col_num,s_100L,38,44,kt_c_100L)
+kurt(col_num,s_100L,174,293,kt_d_100L)
+kurt(col_num,s_100L,382,555,kt_e_100L)
+kurt(col_num,s_100L,607,780,kt_f_100L)
+kurt(col_num,s_100L,846,1019,kt_g_100L)
+kurt(col_num,s_100L,1075,1248,kt_h_100L)
+kurt(col_num,s_100L,1300,1473,kt_i_100L)
+kurt(col_num,s_100L,1539,1712,kt_j_100L)
+
+kt_c_75L=[]
+kt_d_75L=[]
+kt_e_75L=[]
+kt_f_75L=[]
+kt_g_75L=[]
+kt_h_75L=[]
+kt_i_75L=[]
+kt_j_75L=[]
+kurt(col_num,s_75L,38,44,kt_c_75L)
+kurt(col_num,s_75L,174,293,kt_d_75L)
+kurt(col_num,s_75L,382,555,kt_e_75L)
+kurt(col_num,s_75L,607,780,kt_f_75L)
+kurt(col_num,s_75L,846,1019,kt_g_75L)
+kurt(col_num,s_75L,1075,1248,kt_h_75L)
+kurt(col_num,s_75L,1300,1473,kt_i_75L)
+kurt(col_num,s_75L,1539,1712,kt_j_75L)
+
+listk = ['kt_c_150L','kt_d_150L','kt_e_150L','kt_f_150L','kt_g_150L','kt_h_150L','kt_i_150L','kt_j_150L',
+         'kt_c_100L','kt_d_100L','kt_e_100L','kt_f_100L','kt_g_100L','kt_h_100L','kt_i_100L','kt_j_100L',
+         'kt_c_75L', 'kt_d_75L', 'kt_e_75L', 'kt_f_75L', 'kt_g_75L', 'kt_h_75L', 'kt_i_75L', 'kt_j_75L','label']
+datas = {}
+datas['kt_c_150L'] = kt_c_150L
+datas['kt_d_150L'] = kt_d_150L
+datas['kt_e_150L'] = kt_e_150L
+datas['kt_f_150L'] = kt_f_150L
+datas['kt_g_150L'] = kt_g_150L
+datas['kt_h_150L'] = kt_h_150L
+datas['kt_i_150L'] = kt_i_150L
+datas['kt_j_150L'] = kt_j_150L
+
+datas['kt_c_100L'] = kt_c_100L
+datas['kt_d_100L'] = kt_d_100L
+datas['kt_e_100L'] = kt_e_100L
+datas['kt_f_100L'] = kt_f_100L
+datas['kt_g_100L'] = kt_g_100L
+datas['kt_h_100L'] = kt_h_100L
+datas['kt_i_100L'] = kt_i_100L
+datas['kt_j_100L'] = kt_j_100L
+
+datas['kt_c_75L'] = kt_c_75L
+datas['kt_d_75L'] = kt_d_75L
+datas['kt_e_75L'] = kt_e_75L
+datas['kt_f_75L'] = kt_f_75L
+datas['kt_g_75L'] = kt_g_75L
+datas['kt_h_75L'] = kt_h_75L
+datas['kt_i_75L'] = kt_i_75L
+datas['kt_j_75L'] = kt_j_75L
+datas['label'] = label # label of good or defect
+
+cols = pd.DataFrame(columns = listk)
+for id in listk:
+    cols[id] = datas[id]
+cols.to_csv('kurt_{x}.csv'.format(x=test))
+
+
+
+
 sam = 7000
 step = 0.0423
 sam_rate = 1/step
@@ -106,13 +204,15 @@ plt.savefig("FFT_{x}.png".format(x=test))
 '''
 # s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]
 # np.argsort(x) # sort index
+'''
 f_150L = []
 d_150L = []
 f_100L = []
 d_100L = []
 f_75L = []
 d_75L = []
-
+'''
+'''
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
 find_max(col_num,s_150L,100,1700,3,f_150L,d_150L)
@@ -164,7 +264,7 @@ cols = pd.DataFrame(columns = listk)
 for id in listk:
     cols[id] = datas[id]
 cols.to_csv('max_{x}.csv'.format(x=test))
-
+'''
 
 
 
