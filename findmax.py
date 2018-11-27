@@ -26,8 +26,8 @@ col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
 ################ take N colums for fft sample ##################################################
-test = 'MFP_good_1_MFP_60T-brokengear_3'
-label = '60T'
+test = 'MFP_good_1_MFP_60T-brokengear_1'
+label = 'good'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
 rows,cols = img.shape[:2]
@@ -55,7 +55,7 @@ col_100L, s_100L = col_fft_abs(img,2180,col_num)
 col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
 
 ################ take N colums for fft sample ##################################################
-
+'''
 def find_max(cn,col,left,right,maxnum,f_L,d_L):
     for i in range(0,cn):
         fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])] # find max value
@@ -163,7 +163,7 @@ cols = pd.DataFrame(columns = listk)
 for id in listk:
     cols[id] = datas[id]
 cols.to_csv('kurt_{x}.csv'.format(x=test))
-
+'''
 
 
 
@@ -175,7 +175,7 @@ del_f = []
 for i in range(0,rows_h):
     dist_list = dist*i
     del_f.append(dist_list)
-'''
+
 #### plot result ####
 def plot_f(subnum,y,value,picname,xname):
     plt.subplot(subnum)
@@ -193,25 +193,25 @@ def plot_f(subnum,y,value,picname,xname):
     plt.ylabel('abs',fontsize=50)
     my_x_ticks = np.arange(0, 12, 0.5)
     plt.xticks(my_x_ticks)
-    plt.ylim((0, 12000))
+    plt.ylim((0, 8000))
 
 plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
 plt.style.use('ggplot')
-plot_f(311,del_f,s_150L[:rows_h,49],test,'s_150L')
-plot_f(312,del_f,s_100L[:rows_h,49],test,'s_100L')
-plot_f(313,del_f,s_75L[:rows_h,49],test,'s_75L')
+plot_f(311,del_f,s_150L[:rows_h,:],test,'s_150L')
+plot_f(312,del_f,s_100L[:rows_h,:],test,'s_100L')
+plot_f(313,del_f,s_75L[:rows_h,:],test,'s_75L')
 plt.savefig("FFT_{x}.png".format(x=test))
-'''
+
 # s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]
 # np.argsort(x) # sort index
-'''
+
 f_150L = []
 d_150L = []
 f_100L = []
 d_100L = []
 f_75L = []
 d_75L = []
-'''
+
 '''
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')

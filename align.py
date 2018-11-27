@@ -29,8 +29,8 @@ for i in range(0,len(fileList)):
     im2 =  cv2.imread(img2)
     ret1,im1_gray = cv2.threshold(im1,147,255,cv2.THRESH_BINARY)
     ret2,im2_gray = cv2.threshold(im2,147,255,cv2.THRESH_BINARY)
-    print('loading im1: {img1}'.format(img1=img1))
-    print('        im2: {img2}'.format(img2=img2))
+    print('loaded im1: {img1}'.format(img1=img1))
+    print('       im2: {img2}'.format(img2=img2))
 ################### scan left mark #############################################################################
     Lx_high, Lx_low, Ly_left, Ly_right=[890, 980, 130, 300]
     Rx_high, Rx_low, Ry_left, Ry_right=[917, 980, 4591, 4640]
@@ -78,7 +78,7 @@ for i in range(0,len(fileList)):
                x2_mov_right - x1_left,
                y2_mov_right - y1_left)
     print('angle: ', an)
-    print('rotate')
+    print('rotating...')
 ######### rotate #############################################################
 # rotate pivot，rotated angle(positive by counter clk)，scaling ratio
     M = cv2.getRotationMatrix2D((x1_left,y1_left), an, 1)#以平移對齊點為中心旋轉
@@ -129,12 +129,12 @@ for i in range(0,len(fileList)):
                     else:
                         res[x,y,z] = 0
     imageMinus(zero,im1,im2_aligned)
+    #https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/357480/
+    img1_s = img1.split('\\').pop().split('/').pop().rsplit('.', 1)[0]
+    img2_s = img2.split('\\').pop().split('/').pop().rsplit('.', 1)[0]
 
-    rep = rootdir +'\.bpm'
-    for i in range(0,len(rep)):
-        img1 =img1.replace(rep[i],"")
-        img2 =img2.replace(rep[i],"")
-    cv2.imwrite('{x}_{y}.bmp'.format(x=img1,y=img2), zero)
+    cv2.imwrite('eut\{x}_{y}.bmp'.format(x=img1_s,y=img2_s), zero)
+    print('completed {x}/{y}'.format(x=i+1,y=len(fileList)))
 
 
 
