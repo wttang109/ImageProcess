@@ -26,7 +26,7 @@ col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
 '''
 ################ take N colums for fft sample ##################################################
-test = 'MFP_good_1_MFP_60T-brokengear_1'
+test = 'MFP_good_1_MFP_good_4'
 label = 'good'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
 
@@ -55,26 +55,17 @@ col_100L, s_100L = col_fft_abs(img,2180,col_num)
 col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
 
 ################ take N colums for fft sample ##################################################
-'''
-def find_max(cn,col,left,right,maxnum,f_L,d_L):
-    for i in range(0,cn):
-        fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])] # find max value
-        index = np.argsort(col[:,i][left:right])[-maxnum:]+left
-        df = index * dist
-        for j in range(0,maxnum):
-            f_L.append(fft[j])
-            d_L.append(df[j])
-        plt.scatter(df,fft)
-        my_x_ticks = np.arange(0, 12, 0.25)
-        plt.xticks(my_x_ticks)
-#        for a, b in zip(index, fft):
-#            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
 
-def kurt(cn,col,left,right,kt):
+def kurt(cn,col,left,right,kt,sk):
     for i in range(0,cn):
         ks = pd.Series(col[:,i][left:right+1])
         k = ks.kurt()
+        s = ks.skew()
         kt.append(k)
+        sk.append(s)
+
+left  = [150,740, 1185,1631,1998,2518,2887,3332]
+right = [600,1037,1630,1925,2370,2815,3331,3480]
 
 kt_c_150L=[]
 kt_d_150L=[]
@@ -84,14 +75,22 @@ kt_g_150L=[]
 kt_h_150L=[]
 kt_i_150L=[]
 kt_j_150L=[]
-kurt(col_num,s_150L,38,44,kt_c_150L)
-kurt(col_num,s_150L,174,293,kt_d_150L)
-kurt(col_num,s_150L,382,555,kt_e_150L)
-kurt(col_num,s_150L,607,780,kt_f_150L)
-kurt(col_num,s_150L,846,1019,kt_g_150L)
-kurt(col_num,s_150L,1075,1248,kt_h_150L)
-kurt(col_num,s_150L,1300,1473,kt_i_150L)
-kurt(col_num,s_150L,1539,1712,kt_j_150L)
+sk_c_150L=[]
+sk_d_150L=[]
+sk_e_150L=[]
+sk_f_150L=[]
+sk_g_150L=[]
+sk_h_150L=[]
+sk_i_150L=[]
+sk_j_150L=[]
+kurt(col_num,s_150L,left[0],right[0],kt_c_150L,sk_c_150L)
+kurt(col_num,s_150L,left[1],right[1],kt_d_150L,sk_d_150L)
+kurt(col_num,s_150L,left[2],right[2],kt_e_150L,sk_e_150L)
+kurt(col_num,s_150L,left[3],right[3],kt_f_150L,sk_f_150L)
+kurt(col_num,s_150L,left[4],right[4],kt_g_150L,sk_g_150L)
+kurt(col_num,s_150L,left[5],right[5],kt_h_150L,sk_h_150L)
+kurt(col_num,s_150L,left[6],right[6],kt_i_150L,sk_i_150L)
+kurt(col_num,s_150L,left[7],right[7],kt_j_150L,sk_j_150L)
 
 kt_c_100L=[]
 kt_d_100L=[]
@@ -101,14 +100,22 @@ kt_g_100L=[]
 kt_h_100L=[]
 kt_i_100L=[]
 kt_j_100L=[]
-kurt(col_num,s_100L,38,44,kt_c_100L)
-kurt(col_num,s_100L,174,293,kt_d_100L)
-kurt(col_num,s_100L,382,555,kt_e_100L)
-kurt(col_num,s_100L,607,780,kt_f_100L)
-kurt(col_num,s_100L,846,1019,kt_g_100L)
-kurt(col_num,s_100L,1075,1248,kt_h_100L)
-kurt(col_num,s_100L,1300,1473,kt_i_100L)
-kurt(col_num,s_100L,1539,1712,kt_j_100L)
+sk_c_100L=[]
+sk_d_100L=[]
+sk_e_100L=[]
+sk_f_100L=[]
+sk_g_100L=[]
+sk_h_100L=[]
+sk_i_100L=[]
+sk_j_100L=[]
+kurt(col_num,s_100L,left[0],right[0],kt_c_100L,sk_c_100L)
+kurt(col_num,s_100L,left[1],right[1],kt_d_100L,sk_d_100L)
+kurt(col_num,s_100L,left[2],right[2],kt_e_100L,sk_e_100L)
+kurt(col_num,s_100L,left[3],right[3],kt_f_100L,sk_f_100L)
+kurt(col_num,s_100L,left[4],right[4],kt_g_100L,sk_g_100L)
+kurt(col_num,s_100L,left[5],right[5],kt_h_100L,sk_h_100L)
+kurt(col_num,s_100L,left[6],right[6],kt_i_100L,sk_i_100L)
+kurt(col_num,s_100L,left[7],right[7],kt_j_100L,sk_j_100L)
 
 kt_c_75L=[]
 kt_d_75L=[]
@@ -118,18 +125,29 @@ kt_g_75L=[]
 kt_h_75L=[]
 kt_i_75L=[]
 kt_j_75L=[]
-kurt(col_num,s_75L,38,44,kt_c_75L)
-kurt(col_num,s_75L,174,293,kt_d_75L)
-kurt(col_num,s_75L,382,555,kt_e_75L)
-kurt(col_num,s_75L,607,780,kt_f_75L)
-kurt(col_num,s_75L,846,1019,kt_g_75L)
-kurt(col_num,s_75L,1075,1248,kt_h_75L)
-kurt(col_num,s_75L,1300,1473,kt_i_75L)
-kurt(col_num,s_75L,1539,1712,kt_j_75L)
+sk_c_75L=[]
+sk_d_75L=[]
+sk_e_75L=[]
+sk_f_75L=[]
+sk_g_75L=[]
+sk_h_75L=[]
+sk_i_75L=[]
+sk_j_75L=[]
+kurt(col_num,s_75L,left[0],right[0],kt_c_75L,sk_c_75L)
+kurt(col_num,s_75L,left[1],right[1],kt_d_75L,sk_d_75L)
+kurt(col_num,s_75L,left[2],right[2],kt_e_75L,sk_e_75L)
+kurt(col_num,s_75L,left[3],right[3],kt_f_75L,sk_f_75L)
+kurt(col_num,s_75L,left[4],right[4],kt_g_75L,sk_g_75L)
+kurt(col_num,s_75L,left[5],right[5],kt_h_75L,sk_h_75L)
+kurt(col_num,s_75L,left[6],right[6],kt_i_75L,sk_i_75L)
+kurt(col_num,s_75L,left[7],right[7],kt_j_75L,sk_j_75L)
 
 listk = ['kt_c_150L','kt_d_150L','kt_e_150L','kt_f_150L','kt_g_150L','kt_h_150L','kt_i_150L','kt_j_150L',
          'kt_c_100L','kt_d_100L','kt_e_100L','kt_f_100L','kt_g_100L','kt_h_100L','kt_i_100L','kt_j_100L',
-         'kt_c_75L', 'kt_d_75L', 'kt_e_75L', 'kt_f_75L', 'kt_g_75L', 'kt_h_75L', 'kt_i_75L', 'kt_j_75L','label']
+         'kt_c_75L', 'kt_d_75L', 'kt_e_75L', 'kt_f_75L', 'kt_g_75L', 'kt_h_75L', 'kt_i_75L', 'kt_j_75L',
+         'sk_c_150L','sk_d_150L','sk_e_150L','sk_f_150L','sk_g_150L','sk_h_150L','sk_i_150L','sk_j_150L',
+         'sk_c_100L','sk_d_100L','sk_e_100L','sk_f_100L','sk_g_100L','sk_h_100L','sk_i_100L','sk_j_100L',
+         'sk_c_75L', 'sk_d_75L', 'sk_e_75L', 'sk_f_75L', 'sk_g_75L', 'sk_h_75L', 'sk_i_75L', 'sk_j_75L','label']
 datas = {}
 datas['kt_c_150L'] = kt_c_150L
 datas['kt_d_150L'] = kt_d_150L
@@ -157,15 +175,54 @@ datas['kt_g_75L'] = kt_g_75L
 datas['kt_h_75L'] = kt_h_75L
 datas['kt_i_75L'] = kt_i_75L
 datas['kt_j_75L'] = kt_j_75L
+
+datas['sk_c_150L'] = sk_c_150L
+datas['sk_d_150L'] = sk_d_150L
+datas['sk_e_150L'] = sk_e_150L
+datas['sk_f_150L'] = sk_f_150L
+datas['sk_g_150L'] = sk_g_150L
+datas['sk_h_150L'] = sk_h_150L
+datas['sk_i_150L'] = sk_i_150L
+datas['sk_j_150L'] = sk_j_150L
+
+datas['sk_c_100L'] = sk_c_100L
+datas['sk_d_100L'] = sk_d_100L
+datas['sk_e_100L'] = sk_e_100L
+datas['sk_f_100L'] = sk_f_100L
+datas['sk_g_100L'] = sk_g_100L
+datas['sk_h_100L'] = sk_h_100L
+datas['sk_i_100L'] = sk_i_100L
+datas['sk_j_100L'] = sk_j_100L
+
+datas['sk_c_75L'] = sk_c_75L
+datas['sk_d_75L'] = sk_d_75L
+datas['sk_e_75L'] = sk_e_75L
+datas['sk_f_75L'] = sk_f_75L
+datas['sk_g_75L'] = sk_g_75L
+datas['sk_h_75L'] = sk_h_75L
+datas['sk_i_75L'] = sk_i_75L
+datas['sk_j_75L'] = sk_j_75L
 datas['label'] = label # label of good or defect
 
 cols = pd.DataFrame(columns = listk)
 for id in listk:
     cols[id] = datas[id]
-cols.to_csv('kurt_{x}.csv'.format(x=test))
+cols.to_csv('kurt_skew_{x}.csv'.format(x=test))
+
 '''
-
-
+def find_max(cn,col,left,right,maxnum,f_L,d_L):
+    for i in range(0,cn):
+        fft = col[:,i][left:right][(np.argsort(col[:,i][left:right])[-maxnum:])] # find max value
+        index = np.argsort(col[:,i][left:right])[-maxnum:]+left
+        df = index * dist
+        for j in range(0,maxnum):
+            f_L.append(fft[j])
+            d_L.append(df[j])
+        plt.scatter(df,fft)
+        my_x_ticks = np.arange(0, 12, 0.25)
+        plt.xticks(my_x_ticks)
+#        for a, b in zip(index, fft):
+#            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
 
 sam = 7000
 step = 0.0423
@@ -212,7 +269,6 @@ d_100L = []
 f_75L = []
 d_75L = []
 
-'''
 plt.figure(figsize=(40,10))
 plt.style.use('ggplot')
 find_max(col_num,s_150L,100,1700,3,f_150L,d_150L)

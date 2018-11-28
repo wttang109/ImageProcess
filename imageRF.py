@@ -19,8 +19,14 @@ max_abs_X = pd.DataFrame([max_abs["kt_c_150L"],max_abs["kt_d_150L"],max_abs["kt_
                           max_abs["kt_c_100L"],max_abs["kt_d_100L"],max_abs["kt_e_100L"],max_abs["kt_f_100L"],
                           max_abs["kt_g_100L"],max_abs["kt_h_100L"],max_abs["kt_i_100L"],max_abs["kt_j_100L"],
                           max_abs["kt_c_75L"], max_abs["kt_d_75L"], max_abs["kt_e_75L"], max_abs["kt_f_75L"],
-                          max_abs["kt_g_75L"], max_abs["kt_h_75L"], max_abs["kt_i_75L"], max_abs["kt_j_75L"]]).T
-         
+                          max_abs["kt_g_75L"], max_abs["kt_h_75L"], max_abs["kt_i_75L"], max_abs["kt_j_75L"],
+                          max_abs["sk_c_150L"],max_abs["sk_d_150L"],max_abs["sk_e_150L"],max_abs["sk_f_150L"],
+                          max_abs["sk_g_150L"],max_abs["sk_h_150L"],max_abs["sk_i_150L"],max_abs["sk_j_150L"],
+                          max_abs["sk_c_100L"],max_abs["sk_d_100L"],max_abs["sk_e_100L"],max_abs["sk_f_100L"],
+                          max_abs["sk_g_100L"],max_abs["sk_h_100L"],max_abs["sk_i_100L"],max_abs["sk_j_100L"],
+                          max_abs["sk_c_75L"], max_abs["sk_d_75L"], max_abs["sk_e_75L"], max_abs["sk_f_75L"],
+                          max_abs["sk_g_75L"], max_abs["sk_h_75L"], max_abs["sk_i_75L"], max_abs["sk_j_75L"]]).T
+
 # swich row and colum
 max_abs_y = max_abs["label"]
 
@@ -46,8 +52,13 @@ test2_X = pd.DataFrame([test2["kt_c_150L"],test2["kt_d_150L"],test2["kt_e_150L"]
                         test2["kt_c_100L"],test2["kt_d_100L"],test2["kt_e_100L"],test2["kt_f_100L"],
                         test2["kt_g_100L"],test2["kt_h_100L"],test2["kt_i_100L"],test2["kt_j_100L"],
                         test2["kt_c_75L"], test2["kt_d_75L"], test2["kt_e_75L"], test2["kt_f_75L"],
+                        test2["kt_g_75L"], test2["kt_h_75L"], test2["kt_i_75L"], test2["kt_j_75L"],
+                        test2["kt_c_150L"],test2["kt_d_150L"],test2["kt_e_150L"],test2["kt_f_150L"],
+                        test2["kt_g_150L"],test2["kt_h_150L"],test2["kt_i_150L"],test2["kt_j_150L"],
+                        test2["kt_c_100L"],test2["kt_d_100L"],test2["kt_e_100L"],test2["kt_f_100L"],
+                        test2["kt_g_100L"],test2["kt_h_100L"],test2["kt_i_100L"],test2["kt_j_100L"],
+                        test2["kt_c_75L"], test2["kt_d_75L"], test2["kt_e_75L"], test2["kt_f_75L"],
                         test2["kt_g_75L"], test2["kt_h_75L"], test2["kt_i_75L"], test2["kt_j_75L"]]).T
-
 
 test_y = test2["label"]
 test_y_predicted = forest.predict(test2_X)
