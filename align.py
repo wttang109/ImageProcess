@@ -2,7 +2,7 @@
 """
 Created on Wed Oct 24 15:20:09 2018
 
-@author: sue
+@author: sunny
 """
 
 ## https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
