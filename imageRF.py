@@ -10,7 +10,7 @@ from sklearn import cross_validation, ensemble, metrics
 from sklearn.tree import DecisionTreeClassifier
 
 # loading data
-url = "kurt_all.csv"
+url = "kurt_skew.csv"
 max_abs = pd.read_csv(url)
 
 # build train ans test data
@@ -28,22 +28,22 @@ max_abs_X = pd.DataFrame([max_abs["kt_c_150L"],max_abs["kt_d_150L"],max_abs["kt_
                           max_abs["sk_g_75L"], max_abs["sk_h_75L"], max_abs["sk_i_75L"], max_abs["sk_j_75L"]]).T
 
 # swich row and colum
-max_abs_y = max_abs["label"]
+max_abs_y = max_abs["label_list"]
 
-#train_X, test_X, train_y, test_y = cross_validation.train_test_split(max_abs_X, max_abs_y, test_size = 0.3)
+train_X, test_X, train_y, test_y = cross_validation.train_test_split(max_abs_X, max_abs_y, test_size = 0.3)
 
 # build random forest model
 forest = ensemble.RandomForestClassifier(n_estimators = 100) # number of decision tree
 
-forest = forest.fit(max_abs_X, max_abs_y)
+forest = forest.fit(train_X, train_y)
 
 # predicted
-#test_y_predicted = forest.predict(test_X)
+test_y_predicted = forest.predict(test_X)
 
 # accuracy
-#accuracy = metrics.accuracy_score(test_y, test_y_predicted)
-#print(accuracy)
-
+accuracy = metrics.accuracy_score(test_y, test_y_predicted)
+print(accuracy)
+'''
 url_test = 'kurt_MFP_good_1_MFP_60T-brokengear_3.csv'
 test2 = pd.read_csv(url_test)
 
@@ -64,7 +64,7 @@ test_y = test2["label"]
 test_y_predicted = forest.predict(test2_X)
 accuracy = metrics.accuracy_score(test_y, test_y_predicted)
 print(accuracy)
-
+'''
 
 
 '''

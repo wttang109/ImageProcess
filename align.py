@@ -21,7 +21,7 @@ for root, subFolders, files in os.walk(rootdir):
         #print(f)
         fileList.append(f)
 
-for i in range(0,len(fileList)):
+for i in range(1,len(fileList)):
     # Read the images to be aligned
     img1 = fileList[0]         #MFP_good_1  #MFP_good_MTF_600dpi-color_1        #_good_600dpi_test 4000*7000 3800~3950
     img2 = fileList[i]   #MFP_brokengear_1  #MFP_defect_MTF_600dpi-color_1  _defect_600dpi_test 4500~4640
@@ -134,7 +134,7 @@ for i in range(0,len(fileList)):
     img2_s = img2.split('\\').pop().split('/').pop().rsplit('.', 1)[0]
 
     cv2.imwrite('eut\{x}_{y}.bmp'.format(x=img1_s,y=img2_s), zero)
-    print('completed {x}/{y}'.format(x=i+1,y=len(fileList)))
+    print('completed {x}/{y}'.format(x=i,y=len(fileList)-1))
 
 
 
