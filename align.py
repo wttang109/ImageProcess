@@ -13,7 +13,7 @@ import os
 
 fileList = []
 folderCount = 0
-rootdir = 'eut'
+rootdir = '1206_t'
 
 for root, subFolders, files in os.walk(rootdir):
     for file in files:
@@ -27,13 +27,14 @@ for i in range(1,len(fileList)):
     img2 = fileList[i]   #MFP_brokengear_1  #MFP_defect_MTF_600dpi-color_1  _defect_600dpi_test 4500~4640
     im1 =  cv2.imread(img1)
     im2 =  cv2.imread(img2)
+'''
     ret1,im1_gray = cv2.threshold(im1,147,255,cv2.THRESH_BINARY)
     ret2,im2_gray = cv2.threshold(im2,147,255,cv2.THRESH_BINARY)
     print('loaded im1: {img1}'.format(img1=img1))
     print('       im2: {img2}'.format(img2=img2))
 ################### scan left mark #############################################################################
-    Lx_high, Lx_low, Ly_left, Ly_right=[890, 980, 130, 300]
-    Rx_high, Rx_low, Ry_left, Ry_right=[917, 980, 4591, 4640]
+    Lx_high, Lx_low, Ly_left, Ly_right=[210, 235, 150, 200]        # MFP [890, 980, 130, 300]
+    Rx_high, Rx_low, Ry_left, Ry_right=[210, 235, 4670, 4700]      # MFP [917, 980, 4591, 4640]
     def scan(x_high, x_low, y_left, y_right, im):
         for y in range(y_left, y_right):
             for x in range(x_high, x_low):
@@ -50,10 +51,11 @@ for i in range(1,len(fileList)):
     print('##################################### move im2 ')
     H1 = np.float32([[1,0, y1_left - y2_left],
                      [0,1, x1_left - x2_left]])
+    print('move: [{x}, {y}]'.format(x=x2_left - x1_left, y=y2_left - y1_left))
+    
     rows,cols = im2.shape[:2]
     im2_mov_gray = cv2.warpAffine(im2_gray,H1,(cols,rows)) # input、transfer matrix、size
     x2_mov_left,y2_mov_left = scan(Lx_high, Lx_low, Ly_left, Ly_right, im2_mov_gray)  # confirm part
-    print('move: [{x}, {y}]'.format(x=x2_left - x1_left, y=y2_left - y1_left))
     print('im2_mov_gray_left: [{x},{y}]'.format(x=x2_mov_left, y=y2_mov_left), im2_mov_gray[x2_mov_left, y2_mov_left, 0])
 ######### 1st move ######################################################################
 
@@ -79,6 +81,7 @@ for i in range(1,len(fileList)):
                y2_mov_right - y1_left)
     print('angle: ', an)
     print('rotating...')
+
 ######### rotate #############################################################
 # rotate pivot，rotated angle(positive by counter clk)，scaling ratio
     M = cv2.getRotationMatrix2D((x1_left,y1_left), an, 1)#以平移對齊點為中心旋轉
@@ -121,21 +124,21 @@ for i in range(1,len(fileList)):
     print('im2_aligned - im1 with image process')
     zero = np.zeros(im1.shape,np.uint8)
     def imageMinus(res, im1, im2):
-        for y in range(0, 4650):
-            for x in range(0, 7000):
+        for y in range(0, cols):
+            for x in range(0, rows):
                 for z in range(0,2):
                     if (im2[x,y,z] > im1[x,y,z]):
                         res[x,y,z] = im2[x,y,z] - im1[x,y,z]
                     else:
                         res[x,y,z] = 0
     imageMinus(zero,im1,im2_aligned)
-    #https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/357480/
-    img1_s = img1.split('\\').pop().split('/').pop().rsplit('.', 1)[0]
-    img2_s = img2.split('\\').pop().split('/').pop().rsplit('.', 1)[0]
+    # https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/357480/
+    img1_s = img1[28:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
+    img2_s = img2[27:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
 
-    cv2.imwrite('eut\{x}_{y}.bmp'.format(x=img1_s,y=img2_s), zero)
-    print('completed {x}/{y}'.format(x=i,y=len(fileList)-1))
-
+    cv2.imwrite(rootdir+'\\{x}_{y}.bmp'.format(x=img1_s,y=img2_s), zero)
+    print('completed {x}/{y} ##########################################################'.format(x=i,y=len(fileList)-1))
+'''
 
 
 

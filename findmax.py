@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+
 '''
 test = 'MFP_g1_MFP_b1'
 img = cv2.imread('{x}.bmp'.format(x=test),0) 
@@ -25,7 +26,7 @@ def col_fft_abs(test_image,x_pixel):
 col_50,  s_50   = col_fft_abs(img,1530)
 col_75,  s_75   = col_fft_abs(img,1940)
 col_100, s_100  = col_fft_abs(img,2330)
-'''
+
 kt_c_150L=[]
 kt_d_150L=[]
 kt_e_150L=[]
@@ -78,11 +79,12 @@ sk_i_75L=[]
 sk_j_75L=[]
 
 label_list = []
+'''
 ################ take N colums for fft sample ##################################################
 
 fileList = []
 folderCount = 0
-rootdir = 'eut'
+rootdir = 'D:\\toexcel'
 col_num = 100
 for root, subFolders, files in os.walk(rootdir):
     for file in files:
@@ -90,17 +92,19 @@ for root, subFolders, files in os.walk(rootdir):
         #print(f)
         fileList.append(f)
         
-for i in range(1,len(fileList)):
-    print('Loading files [{x}/{y}]'.format(x=i,y=len(fileList)-1))
+for i in range(0,len(fileList)):
+    print('Loading files [{x}/{y}]'.format(x=i+1,y=len(fileList)))
     test = fileList[i]
     img = cv2.imread(test,0)
+    '''
     if '12T' in test:
         label = '12T'
     elif '60T' in test:
         label = '60T'
     elif test.count('good')==2:
         label = 'good'
-
+    '''
+    '''
     rows,cols = img.shape[:2]
     rows_h = int(rows/2)
     def col_fft_abs(test_image,x_pixel,cn):
@@ -112,21 +116,85 @@ for i in range(1,len(fileList)):
             f_x[:,i-x_pixel+int(cn/2)] = np.fft.fft(col_x[:,i-x_pixel+int(cn/2)])
             s_x[:,i-x_pixel+int(cn/2)] = np.abs(f_x[:,i-x_pixel+int(cn/2)])
         return col_x, s_x
-    
     '''
+    rows,cols = img.shape[:2]
+#    rows_hlf = int(rows/2)
+    rows_h = 300   # cut the empty of front and end
+    rows_l = 6600
+    def col_fft_abs(test_image,x_pixel,cn):
+        col_x = np.zeros(shape=(rows_l-rows_h,cn))
+        f_x = np.zeros(shape=(rows_l-rows_h,cn))
+        s_x = np.zeros(shape=(rows_l-rows_h,cn))
+        for i in range(x_pixel-int(cn/2),x_pixel+int(cn/2)):
+            col_x[:,i-x_pixel+int(cn/2)] = img[rows_h:rows_l,i]
+            f_x[:,i-x_pixel+int(cn/2)] = np.fft.fft(col_x[:,i-x_pixel+int(cn/2)])
+            s_x[:,i-x_pixel+int(cn/2)] = np.abs(f_x[:,i-x_pixel+int(cn/2)])
+        return col_x, s_x
+    
     col_50,  s_50   = col_fft_abs(img,1530,col_num)
-    col_75,  s_75   = col_fft_abs(img,1940,col_num)
+    col_75,  s_75   = col_fft_abs(img,1930,col_num)
     col_100, s_100  = col_fft_abs(img,2330,col_num)
-    col_50i, s_50i  = col_fft_abs(img,2760,col_num)
-    col_75i, s_75i  = col_fft_abs(img,3160,col_num)
-    col_100i,s_100i = col_fft_abs(img,3550,col_num)
+    col_50L, s_50L  = col_fft_abs(img,2740,col_num)
+    col_75L, s_75L  = col_fft_abs(img,3140,col_num)
+    col_100L,s_100L = col_fft_abs(img,3550,col_num)
+
     '''
     col_150L, s_150L = col_fft_abs(img,1430,col_num)
     col_100L, s_100L = col_fft_abs(img,2180,col_num)
     col_75L,  s_75L  = col_fft_abs(img,2920,col_num)
-
+    '''
+    sam = rows_l-rows_h
+    sam_hlf = int(sam/2)
+    step = 0.0423
+    sam_rate = 1/step
+    dist = sam_rate/sam
+    del_f = []
+    for i in range(0,sam_hlf):
+        dist_list = dist*i
+        del_f.append(dist_list)
+    
+    plt.ioff()
+    
+    #### plot result ####
+    def plot_f(subnum,y,value,picname,xname):
+        plt.subplot(subnum)
+        plt.plot(y,value)
+        ############ https://blog.csdn.net/Running_J/article/details/52119336 ####
+        #    max_indx=np.argmax(ran)#max value index    
+        #    plt.plot(max_indx,ran[max_indx],'ks')
+        
+        #    show_max='['+str(max_indx)+' '+str(ran[max_indx])+']'
+        #    plt.annotate(show_max,xytext=(max_indx,ran[max_indx]),xy=(max_indx,ran[max_indx]))
+        ############ https://blog.csdn.net/Running_J/article/details/52119336 ####
+        plt.xticks(fontsize=50)
+        plt.yticks(fontsize=50)
+        plt.title("FFT_{x}_{y}".format(x=picname,y=xname),fontsize=50)
+        plt.ylabel('abs',fontsize=50)
+        my_x_ticks = np.arange(0, 12, 0.5)
+        plt.xticks(my_x_ticks)
+        plt.ylim((0, 8000))
+        
+    
+    
+    fig1 = plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
+    plt.style.use('ggplot')
+    plot_f(311,del_f,s_50[:sam_hlf,49],test,'s_50')
+    plot_f(312,del_f,s_75[:sam_hlf,49],test,'s_75')
+    plot_f(313,del_f,s_100[:sam_hlf,49],test,'s_100')
+    test_split = test.split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
+    plt.savefig(rootdir+'\\FFT_50_75_100_{x}.png'.format(x=test_split))
+    plt.close(fig1)
+        
+    fig2 = plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
+    plt.style.use('ggplot')
+    plot_f(311,del_f,s_50L[:sam_hlf,49],test,'s_50L')
+    plot_f(312,del_f,s_75L[:sam_hlf,49],test,'s_75L')
+    plot_f(313,del_f,s_100L[:sam_hlf,49],test,'s_100L')
+    plt.savefig(rootdir+"\\FFT_50L_75L_100L_{x}.png".format(x=test_split))
+    plt.close(fig2)
+    
 ################ take N colums for fft sample ##################################################
-
+'''
     def kurt(cn,col,left,right,kt,sk):
         for i in range(0,cn):
             ks = pd.Series(col[:,i][left:right+1])
@@ -168,6 +236,8 @@ for i in range(1,len(fileList)):
     kurt(col_num,s_75L,left[5],right[5],kt_h_75L,sk_h_75L)
     kurt(col_num,s_75L,left[6],right[6],kt_i_75L,sk_i_75L)
     kurt(col_num,s_75L,left[7],right[7],kt_j_75L,sk_j_75L)
+    
+    
 
 print('Write data to csv')
 listks = ['kt_c_150L','kt_d_150L','kt_e_150L','kt_f_150L','kt_g_150L','kt_h_150L','kt_i_150L','kt_j_150L',
@@ -236,7 +306,7 @@ ex_cols = pd.DataFrame(columns = listks)
 for id in listks:
     ex_cols[id] = datas[id]
 ex_cols.to_csv('kurt_skew.csv')
-
+'''
 '''
 def find_max(cn,col,left,right,maxnum,f_L,d_L):
     for i in range(0,cn):
@@ -251,45 +321,14 @@ def find_max(cn,col,left,right,maxnum,f_L,d_L):
         plt.xticks(my_x_ticks)
 #        for a, b in zip(index, fft):
 #            plt.text(a, b, (a,b), ha='center', va='bottom', fontsize=20)
+'''
 
-sam = 7000
-step = 0.0423
-sam_rate = 1/step
-dist = sam_rate/sam
-del_f = []
-for i in range(0,rows_h):
-    dist_list = dist*i
-    del_f.append(dist_list)
 
-#### plot result ####
-def plot_f(subnum,y,value,picname,xname):
-    plt.subplot(subnum)
-    plt.plot(y,value)
-############ https://blog.csdn.net/Running_J/article/details/52119336 ####
-#    max_indx=np.argmax(ran)#max value index    
-#    plt.plot(max_indx,ran[max_indx],'ks')
-    
-#    show_max='['+str(max_indx)+' '+str(ran[max_indx])+']'
-#    plt.annotate(show_max,xytext=(max_indx,ran[max_indx]),xy=(max_indx,ran[max_indx]))
-############ https://blog.csdn.net/Running_J/article/details/52119336 ####
-    plt.xticks(fontsize=50)
-    plt.yticks(fontsize=50)
-    plt.title("FFT_{x}_{y}".format(x=picname,y=xname),fontsize=50)
-    plt.ylabel('abs',fontsize=50)
-    my_x_ticks = np.arange(0, 12, 0.5)
-    plt.xticks(my_x_ticks)
-    plt.ylim((0, 8000))
 
-plt.figure(figsize=(130,40), dpi=100, linewidth=0.9)
-plt.style.use('ggplot')
-plot_f(311,del_f,s_150L[:rows_h,:],test,'s_150L')
-plot_f(312,del_f,s_100L[:rows_h,:],test,'s_100L')
-plot_f(313,del_f,s_75L[:rows_h,:],test,'s_75L')
-plt.savefig("FFT_{x}.png".format(x=test))
 
 # s_50[150:450][sorted(np.argsort(s_50[150:450])[-3:])]
 # np.argsort(x) # sort index
-
+'''
 f_150L = []
 d_150L = []
 f_100L = []
