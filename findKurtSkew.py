@@ -12,7 +12,7 @@ import os
 
 fileList = []
 folderCount = 0
-rootdir = 'D:\\toexcel'
+rootdir = 'D:\\1205_BTF\\BMP\\minus'
 col_num = 100
 for root, subFolders, files in os.walk(rootdir):
     for file in files:
@@ -153,12 +153,14 @@ for i in range(0,len(fileList)):
     test = fileList[i]
     img = cv2.imread(test,0)
     
-    if 'no-grease' in test:
-        label = 'no-grease'
-    elif 'grease-1' in test:
-        label = 'grease-1'
-    elif 'grease-2' in test:
-        label = 'grease-2'
+    if 'plus0.3' in test:
+        label = 'plus0.3'
+    elif 'plus0.5' in test:
+        label = 'plus0.5'
+    elif 'plus1.0' in test:
+        label = 'plus1.0'
+    elif 'plus1.4' in test:
+        label = 'plus1.4'
     elif test.count('grease-gear')==2:
         label = 'good'
     
@@ -406,7 +408,7 @@ datas['label_list'] = label_list # label of good or defect
 ex_cols = pd.DataFrame(columns = listks)
 for id in listks:
     ex_cols[id] = datas[id]
-ex_cols.to_csv('D:\\kurt_skew.csv')
+ex_cols.to_csv(rootdir+'\\kurt_skew.csv')
 
 
 

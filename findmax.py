@@ -84,7 +84,7 @@ label_list = []
 
 fileList = []
 folderCount = 0
-rootdir = 'D:\\toexcel'
+rootdir = 'D:\\1205_BTF\\BMP\\minus'
 col_num = 100
 for root, subFolders, files in os.walk(rootdir):
     for file in files:

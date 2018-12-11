@@ -13,7 +13,7 @@ import os
 
 fileList = []
 folderCount = 0
-rootdir = '1206_t'
+rootdir = 'D:\\1205_BTF\\BMP'
 
 for root, subFolders, files in os.walk(rootdir):
     for file in files:
@@ -27,9 +27,9 @@ for i in range(1,len(fileList)):
     img2 = fileList[i]   #MFP_brokengear_1  #MFP_defect_MTF_600dpi-color_1  _defect_600dpi_test 4500~4640
     im1 =  cv2.imread(img1)
     im2 =  cv2.imread(img2)
-'''
-    ret1,im1_gray = cv2.threshold(im1,147,255,cv2.THRESH_BINARY)
-    ret2,im2_gray = cv2.threshold(im2,147,255,cv2.THRESH_BINARY)
+
+    ret1,im1_gray = cv2.threshold(im1,117,255,cv2.THRESH_BINARY)
+    ret2,im2_gray = cv2.threshold(im2,117,255,cv2.THRESH_BINARY)
     print('loaded im1: {img1}'.format(img1=img1))
     print('       im2: {img2}'.format(img2=img2))
 ################### scan left mark #############################################################################
@@ -121,7 +121,7 @@ for i in range(1,len(fileList)):
     im2_mov_rot = cv2.warpAffine(im2_mov1,M,(cols,rows))
     im2_aligned = cv2.warpAffine(im2_mov_rot,H2,(cols,rows))
 ######### process #############################################
-    print('im2_aligned - im1 with image process')
+    print('im2_aligned - im1 with image process [{x}/{y}]'.format(x=i,y=len(fileList)-1))
     zero = np.zeros(im1.shape,np.uint8)
     def imageMinus(res, im1, im2):
         for y in range(0, cols):
@@ -133,12 +133,10 @@ for i in range(1,len(fileList)):
                         res[x,y,z] = 0
     imageMinus(zero,im1,im2_aligned)
     # https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/357480/
-    img1_s = img1[28:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
-    img2_s = img2[27:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
+    img1_s = img1[36:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
+    img2_s = img2[32:].split('\\').pop().split('/').pop().replace('MFP45_600C_','').rsplit('.', 1)[0]
 
     cv2.imwrite(rootdir+'\\{x}_{y}.bmp'.format(x=img1_s,y=img2_s), zero)
-    print('completed {x}/{y} ##########################################################'.format(x=i,y=len(fileList)-1))
-'''
 
 
 
